@@ -434,41 +434,34 @@
     </div>
 
     <script>
-      // Show section on navigation click
+      // Show or hide sections on navigation click
       function showSection(event, sectionId) {
         event.preventDefault();
-
-        // Remove active class from all nav links
-        const navLinks = document.querySelectorAll('nav a');
-        navLinks.forEach(link => link.classList.remove('active'));
-
-        // Add active class to clicked link
-        event.currentTarget.classList.add('active');
-
-        // Hide all sections
         const sections = document.querySelectorAll('section');
-        sections.forEach(section => section.classList.remove('active'));
-
-        // Show target section
-        const target = document.getElementById(sectionId);
-        if (target) {
-          target.classList.add('active');
-          // Scroll to top of container smoothly
-          document.querySelector('.container').scrollTo({ top: 0, behavior: 'smooth' });
-        }
+        sections.forEach((sec) => sec.classList.remove('active'));
+        const navLinks = document.querySelectorAll('nav a');
+        navLinks.forEach((link) => link.classList.remove('active'));
+        document.getElementById(sectionId).classList.add('active');
+        event.target.classList.add('active');
       }
 
-      // Hide loading screen and show main content on window load
-      window.addEventListener("load", () => {
-        setTimeout(() => {
-          const loadingScreen = document.getElementById("loading");
-          loadingScreen.classList.add("fade-out");
+      // Disable right-click context menu on the whole page
+      document.addEventListener('contextmenu', function(event) {
+        event.preventDefault();
+      });
 
+      // Loading screen fade out
+      window.addEventListener('load', () => {
+        const loadingScreen = document.getElementById('loading');
+        const mainContent = document.getElementById('mainContent');
+
+        setTimeout(() => {
+          loadingScreen.classList.add('fade-out');
           setTimeout(() => {
-            loadingScreen.style.display = "none";
-            document.getElementById("mainContent").style.display = "block";
-          }, 1500);
-        }, 2500);
+            loadingScreen.style.display = 'none';
+            mainContent.style.display = 'block';
+          }, 1600);
+        }, 2300);
       });
     </script>
   </body>
