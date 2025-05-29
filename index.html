@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Consulting Services Italy</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f4f9;
+        color: #333;
+        scroll-behavior: smooth;
+      }
+
+      /* Loading screen */
+      .loading-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: linear-gradient(135deg, #a3c4f3, #c3d9ff); /* azzurro pastello */
+        color: #1a1a1a;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        z-index: 9999;
+        opacity: 1;
+        transition: opacity 1.5s ease;
+        font-weight: 600;
+      }
+      .loading-screen.fade-out {
+        opacity: 0;
+        pointer-events: none;
+      }
+      .loading-screen h1 {
+        font-size: 3rem;
+        margin: 0;
+        letter-spacing: 1.5px;
+        animation: fadeIn 2s ease-in-out;
+        cursor: default;
+      }
+      .loading-screen h1.pulse {
+        animation: pulse 2.5s ease-in-out infinite;
+      }
+      .loading-screen p {
+        font-size: 1.3rem;
+        margin-top: 0.5rem;
+        font-style: italic;
+        color: #2c3e50;
+      }
+
+      /* Spinner */
+      .spinner {
+        margin: 1.5rem 0;
+        border: 6px solid #c3d9ff;
+        border-top: 6px solid #3498db;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+      }
+
+      /* Progress bar container */
+      .progress-bar {
+        width: 250px;
+        height: 8px;
+        background-color: #c3d9ff;
+        border-radius: 5px;
+        overflow: hidden;
+      }
+
+      /* Progress bar animated fill */
+      .progress {
+        width: 0;
+        height: 100%;
+        background: linear-gradient(90deg, #2980b9, #3498db);
+        animation: progressLoad 2s forwards;
+      }
+
+      /* Main container */
+      .container {
+        max-width: 1000px;
+        margin: 2rem auto 4rem auto;
+        padding: 2rem;
+        background-color: white;
+        box-shadow: 0 0 25px rgba(0, 0, 0, 0.08);
+        border-radius: 12px;
+        display: none;
+      }
+
+      header {
+        text-align: center;
+        margin-bottom: 1rem;
+      }
+      header h1 {
+        font-size: 2.8rem;
+        color: #2c3e50;
+        letter-spacing: 2px;
+      }
+      header p {
+        font-size: 1.25rem;
+        color: #555;
+        margin-top: 0.3rem;
+        font-weight: 500;
+      }
+
+      /* Hero image */
+      .hero-image {
+        width: 100%;
+        max-height: 300px;
+        object-fit: cover;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      }
+
+      /* Navigation */
+      nav {
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+      }
+      nav a {
+        text-decoration: none;
+        color: #2c3e50;
+        font-weight: 600;
+        padding: 0.65rem 1.2rem;
+        border-radius: 8px;
+        transition: background-color 0.3s, color 0.3s;
+        border: 2px solid transparent;
+        user-select: none;
+      }
+      nav a:hover {
+        background-color: #3498db;
+        color: white;
+      }
+      nav a.active {
+        background-color: #2c3e50;
+        color: white;
+        border-color: #2980b9;
+      }
+
+      /* Sections */
+      section {
+        display: none;
+        padding: 1.2rem 0;
+        line-height: 1.7;
+      }
+      section.active {
+        display: block;
+        animation: fadeIn 0.4s ease-in;
+      }
+
+      h2 {
+        color: #2c3e50;
+        border-bottom: 3px solid #3498db;
+        padding-bottom: 0.3rem;
+        margin-bottom: 1rem;
+        letter-spacing: 1.2px;
+      }
+
+      p {
+        font-size: 1.1rem;
+        color: #444;
+        margin-bottom: 1.2rem;
+      }
+
+      ul {
+        list-style: none;
+        padding-left: 0;
+      }
+      ul li {
+        margin-bottom: 0.9rem;
+        font-size: 1.1rem;
+        color: #333;
+        display: flex;
+        align-items: center;
+      }
+      ul li::before {
+        content: "✅"; /* checkmark icon */
+        margin-right: 10px;
+        color: #3498db;
+        font-weight: bold;
+        font-size: 1.2rem;
+      }
+
+      /* Alternating background for sections */
+      #services {
+        background: #eef6fb;
+        padding: 1.5rem 2rem;
+        border-radius: 8px;
+      }
+      #why {
+        background: #fafafa;
+        padding: 1.5rem 2rem;
+        border-radius: 8px;
+      }
+      #partners {
+        background: #eef6fb;
+        padding: 1.5rem 2rem;
+        border-radius: 8px;
+      }
+      #careers {
+        background: #fafafa;
+        padding: 1.5rem 2rem;
+        border-radius: 8px;
+      }
+      #contact {
+        background: #eef6fb;
+        padding: 1.5rem 2rem;
+        border-radius: 8px;
+      }
+
+      /* Team section */
+      .team-list {
+        display: flex;
+        gap: 2rem;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .team-member {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        padding: 1rem;
+        width: 220px;
+        text-align: center;
+        transition: transform 0.3s;
+      }
+      .team-member:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+      }
+      .team-member img {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 0.8rem;
+        border: 3px solid #3498db;
+      }
+      .team-member h3 {
+        margin: 0.3rem 0;
+        color: #2c3e50;
+      }
+      .team-member p {
+        font-size: 0.95rem;
+        color: #666;
+        margin-top: 0;
+      }
+
+      /* Footer */
+      footer {
+        text-align: center;
+        margin-top: 3rem;
+        font-size: 0.9rem;
+        color: #777;
+      }
+
+      /* Fade in animation */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Pulse animation for loading title */
+      @keyframes pulse {
+        0%, 100% {
+          color: #2c3e50;
+          text-shadow: 0 0 8px #3498db;
+        }
+        50% {
+          color: #3498db;
+          text-shadow: 0 0 18px #2980b9;
+        }
+      }
+
+      /* Spinner animation */
+      @keyframes spin {
+        0% { transform: rotate(0deg);}
+        100% { transform: rotate(360deg);}
+      }
+
+      /* Progress bar animation */
+      @keyframes progressLoad {
+        from { width: 0; }
+        to { width: 100%; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="loading-screen" id="loading">
+      <h1 class="pulse">Welcome to ConstSystem</h1>
+      <p>Empowering Your Presence in Italy...</p>
+      <div class="spinner"></div>
+      <div class="progress-bar">
+        <div class="progress"></div>
+      </div>
+    </div>
+
+    <div class="container" id="mainContent">
+      <header>
+        <h1>ConstSystem</h1>
+        <p>Your Representation Office in Italy</p>
+        <img
+          src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1000&q=80"
+          alt="ConstSystem"
+          class="hero-image"
+        />
+      </header>
+
+      <nav id="navbar">
+        <a href="#" class="active" onclick="showSection(event, 'home')">Home</a>
+        <a href="#" onclick="showSection(event, 'services')">What We Offer</a>
+        <a href="#" onclick="showSection(event, 'team')">Our Team</a>
+        <a href="#" onclick="showSection(event, 'why')">Why Choose Us</a>
+        <a href="#" onclick="showSection(event, 'partners')">Our Partners</a>
+        <a href="#" onclick="showSection(event, 'careers')">Careers</a>
+        <a href="#" onclick="showSection(event, 'contact')">Contact Us</a>
+      </nav>
+
+      <section id="home" class="active">
+        <h2>Welcome</h2>
+        <p>
+          We offer consulting and native-language contact management services for companies representing Italian industries.
+          Our team is dedicated to helping your business navigate the complexities of the Italian market with confidence.
+          Whether you're entering Italy for the first time or expanding your presence, we provide personalized solutions tailored to your needs.
+          Trust us to be your strategic partner in building strong, lasting business relationships in Italy.
+        </p>
+      </section>
+
+      <section id="services">
+        <h2>What We Offer</h2>
+        <ul>
+          <li>Industrial sector liaison and coordination to streamline your operations and partnerships across Italy.</li>
+          <li>Support for agriculture and food processing companies to help you meet local regulations and market demands.</li>
+          <li>Representation in medical and pharmaceutical fields ensuring compliance and effective communication with stakeholders.</li>
+          <li>Native-language communication and client outreach to bridge language barriers and foster trust with your Italian clients.</li>
+        </ul>
+      </section>
+
+      <section id="team">
+        <h2>Our Team</h2>
+        <div class="team-list">
+          <div class="team-member">
+            <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Giulia Rossi" />
+            <h3>Giulia Rossi</h3>
+            <p>Founder & Consultant</p>
+          </div>
+          <div class="team-member">
+            <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="Marco Bianchi" />
+            <h3>Marco Bianchi</h3>
+            <p>Operations Manager</p>
+          </div>
+          <div class="team-member">
+            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Francesca Conti" />
+            <h3>Francesca Conti</h3>
+            <p>Client Relations</p>
+          </div>
+          <div class="team-member">
+            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Luca Esposito" />
+            <h3>Luca Esposito</h3>
+            <p>Market Analyst</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="why">
+        <h2>Why Choose Us?</h2>
+        <ul>
+          <li>Native Italian speakers with extensive local market knowledge.</li>
+          <li>Personalized consulting services tailored to your business goals.</li>
+          <li>Proven track record helping companies successfully enter and grow in Italy.</li>
+          <li>Multilingual team offering seamless communication with your clients and partners.</li>
+        </ul>
+      </section>
+
+      <section id="partners">
+        <h2>Our Partners</h2>
+        <p>
+          We proudly collaborate with industry leaders and institutions across Italy:
+        </p>
+        <ul>
+          <li>Italian Chamber of Commerce</li>
+          <li>National Association of Industrial Enterprises</li>
+          <li>Agricultural Export Consortium</li>
+          <li>Medical Devices Italian Federation</li>
+          <li>Food & Beverage Excellence Network</li>
+        </ul>
+      </section>
+
+      <section id="careers">
+        <h2>Careers</h2>
+        <p>
+          Interested in joining our team? We are looking for motivated professionals who are passionate about helping companies succeed in Italy.
+          Current openings:
+        </p>
+        <ul>
+          <li>Business Development Specialist</li>
+          <li>Multilingual Client Support</li>
+          <li>Market Research Analyst</li>
+          <li>Administrative Coordinator</li>
+        </ul>
+        <p>
+          Send your CV and cover letter to <a href="mailto:careers@ConstSystem.it">careers@italianconsultingbridge.com</a>
+        </p>
+      </section>
+
+      <section id="contact">
+        <h2>Contact Us</h2>
+        <p>
+          Address: Via Roma 45, Milan, Italy<br />
+          Phone: +39 02 1234 5678<br />
+          Email: <a href="mailto:info@ConstSystem.it">info@italianconsultingbridge.com</a><br />
+          Website: <a href="https://ConstSystem.rushstatus.it" target="_blank" rel="noopener noreferrer">www.italianconsultingbridge.com</a>
+        </p>
+      </section>
+
+      <footer>
+        &copy; 2025 ConstSystem. All rights reserved.
+      </footer>
+    </div>
+
+    <script>
+      // Show section on navigation click
+      function showSection(event, sectionId) {
+        event.preventDefault();
+
+        // Remove active class from all nav links
+        const navLinks = document.querySelectorAll('nav a');
+        navLinks.forEach(link => link.classList.remove('active'));
+
+        // Add active class to clicked link
+        event.currentTarget.classList.add('active');
+
+        // Hide all sections
+        const sections = document.querySelectorAll('section');
+        sections.forEach(section => section.classList.remove('active'));
+
+        // Show target section
+        const target = document.getElementById(sectionId);
+        if (target) {
+          target.classList.add('active');
+          // Scroll to top of container smoothly
+          document.querySelector('.container').scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }
+
+      // Hide loading screen and show main content on window load
+      window.addEventListener("load", () => {
+        setTimeout(() => {
+          const loadingScreen = document.getElementById("loading");
+          loadingScreen.classList.add("fade-out");
+
+          setTimeout(() => {
+            loadingScreen.style.display = "none";
+            document.getElementById("mainContent").style.display = "block";
+          }, 1500);
+        }, 2500);
+      });
+    </script>
+  </body>
+</html>
